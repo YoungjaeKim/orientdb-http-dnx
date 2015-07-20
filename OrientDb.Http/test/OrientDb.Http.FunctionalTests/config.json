@@ -1,0 +1,13 @@
+﻿{
+  "Data": {
+  },
+  "orientDb": {
+    "http": {
+      "_default": {
+        "baseUrl": "http://localhost:2480/",
+        "authorization": "Basic YWRtaW46YWRtaW4=",
+        "databaseName": "test"
+      }
+    }
+  }
+}
