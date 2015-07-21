@@ -1,32 +1,32 @@
-﻿{
-  "version": "1.0.0-*",
-  "description": "",
-  "authors": [ "" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+{
+    "version": "1.0.0-*",
+    "description": "",
+    "authors": [ "" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": "",
 
-  "commands": {
-    "test": "xunit.runner.dnx"
-  },
+    "commands": {
+        "test": "xunit.runner.dnx"
+    },
 
-  "dependencies": {
-    "OrientDb.Core": "",
-    "xunit.core": "2.1.0-beta3-build3029",
-    "xunit.runner.dnx": "2.1.0-beta4-build108",
-    "xunit.runner.visualstudio": "2.1.0-beta3-build1069",
-    "xunit.assert": "2.1.0-beta4-build3042"
-  },
+    "dependencies": {
+        "OrientDb.Core": "",
+        "xunit.core": "2.1.0-beta3-build3029",
+        "xunit.runner.dnx": "2.1.0-beta4-build108",
+        "xunit.runner.visualstudio": "2.1.0-beta3-build1069",
+        "xunit.assert": "2.1.0-beta4-build3042"
+    },
 
-  "frameworks" : {
-    "dnx451": { },
-    "dnxcore50" : {
-      "dependencies": {
-        "System.Collections": "4.0.10-beta-22816",
-        "System.Linq": "4.0.0-beta-22816",
-        "System.Threading": "4.0.10-beta-22816",
-        "Microsoft.CSharp": "4.0.0-beta-22816"
-      }
+    "frameworks": {
+        "dnx451": { },
+        "dnxcore50": {
+            "dependencies": {
+              "Microsoft.CSharp": "4.0.0-beta-23110",
+              "System.Collections": "4.0.10-beta-23110",
+              "System.Linq": "4.0.0-beta-23110",
+              "System.Threading": "4.0.10-beta-23110"
+            }
+        }
     }
-  }
 }

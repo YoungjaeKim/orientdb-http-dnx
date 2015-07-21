@@ -16,7 +16,6 @@ namespace OrientDb.Http
 		}
 		public DbContext(IHttpClientProvider clientProvider, DbContextOptions options)
 		{
-			
 		}
 
 		protected HttpClient HttpClient { get; set; } = new HttpClient();
