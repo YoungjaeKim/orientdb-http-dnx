@@ -10,12 +10,28 @@ namespace OrientDb.Http
 {
 	public class DbContext : IDbContext
 	{
-		public DbContext()
-		{
+		private readonly IHttpClientProvider clientProvider;
+		private readonly DbContextOptions options;
 
+		public DbContext() : this(new DefaultHttpClientProvider(), new DbContextOptions())
+		{
+		}
+		public DbContext(DbContextOptions options) : this(new DefaultHttpClientProvider(), options)
+		{
 		}
 		public DbContext(IHttpClientProvider clientProvider, DbContextOptions options)
 		{
+			if (clientProvider == null)
+			{
+				throw new ArgumentNullException(nameof(clientProvider));
+			}
+			if (options == null)
+			{
+				throw new ArgumentNullException(nameof(options));
+			}
+			this.clientProvider = clientProvider;
+			this.options = options;
+			HttpClient = clientProvider.GetHttpClient(options.Configure);
 		}
 
 		protected HttpClient HttpClient { get; set; } = new HttpClient();

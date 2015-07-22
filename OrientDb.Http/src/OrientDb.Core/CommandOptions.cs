@@ -4,7 +4,17 @@
     {
 		public enum CommandLanguage
 		{
+			/// <summary>
+			/// SQL
+			/// </summary>
 			Sql,
+			/// <summary>
+			/// Javascript
+			/// </summary>
+			Script,
+			/// <summary>
+			/// Gremlin script
+			/// </summary>
 			Gremlin
 		}
 

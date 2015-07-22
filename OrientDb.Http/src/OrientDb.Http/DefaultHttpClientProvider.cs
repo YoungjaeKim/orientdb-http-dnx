@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 
 namespace OrientDb.Http
 {
-	public class HttpClientProvider : IHttpClientProvider
+	public class DefaultHttpClientProvider : IHttpClientProvider
 	{
-		private static object lockObject = new object();
-		private static HttpClient cachedClient;
+		private object lockObject = new object();
+		private HttpClient cachedClient;
 		public HttpClient GetHttpClient(Action<HttpClient> configure = null)
 		{
 			lock (lockObject)
@@ -21,15 +20,11 @@ namespace OrientDb.Http
 					client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
 					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
 					client.DefaultRequestHeaders.ExpectContinue = false;
-					cachedClient = client;
 					if (configure != null)
 					{
-						Task.Factory.StartNew(stateClient =>
-						{
-							var invoker = stateClient as HttpClient;
-							configure(invoker);
-						}, client);
+						configure(client);
 					}
+					cachedClient = client;
 				}
 			}
 			return cachedClient;

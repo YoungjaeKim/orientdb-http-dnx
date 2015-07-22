@@ -5,23 +5,23 @@ namespace OrientDb.Tests
 {
 	public abstract class DbContextTestsBase
     {
-		public abstract IDbContext GetSimpleDbContext();
+		public abstract IDbContext GetDefaultSut();
 
 		[Fact]
 		public virtual void DbContext_is_IDbContext()
 		{
-			var dbContext = GetSimpleDbContext();
+			var dbContext = GetDefaultSut();
 			Assert.True(dbContext is IDbContext);
 		}
 
 		[Fact]
 		public virtual void ExecuteCommandAsync_GuardClause()
 		{
-			var dbContext = GetSimpleDbContext();
-			Assert.Throws<ArgumentNullException>(() =>
+			var dbContext = GetDefaultSut();
+			Assert.ThrowsAsync<ArgumentNullException>(async () =>
 			{
-				dbContext.ExecuteCommandAsync<object>(null);
-			});
+				await dbContext.ExecuteCommandAsync<object>(null);
+			}).Wait();
 		}
 
 	}

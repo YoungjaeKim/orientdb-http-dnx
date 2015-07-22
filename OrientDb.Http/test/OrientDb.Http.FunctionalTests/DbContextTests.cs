@@ -1,33 +1,26 @@
 ﻿using Microsoft.Framework.ConfigurationModel;
-using Newtonsoft.Json;
 using OrientDb.Core.FunctionalTests;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace OrientDb.Http.FunctionalTests
 {
-    public class DbContextTests : DbContextTestsBase
+	public class DbContextTests : DbContextTestsBase
     {
-		public DbContextTests()
-		{
-			//var config = new Configuration(source);
-			//var dbConfig = config.GetSubKey("orientDb:http:_default");
-			//var baseUrl = dbConfig["baseUrl"];
-			//var databaseName = dbConfig["databaseName"];
-		}
+		// in aspnet beta5, JsonConfigurationSource doesn't work.
+		// a hard coded configuration will be used before beta6.
+		private static readonly IConfiguration DefaultConfiguration = 
+			new Configuration(
+				new MemoryConfigurationSource(
+					new Dictionary<string, string>
+					{
+						{ "orientDb:http:_default:baseUrl", "http://localhost:2480" },
+						{ "orientDb:http:_default:authorization", "Basic YWRtaW46YWRtaW4=" },
+						{ "orientDb:http:_default:databaseName", "test" },
+					}));
 
-		public override IDbContext GetDefaultDbContext()
+		public override IDbContext GetDefaultSut()
 		{
-			return new DbContext();
-		}
-
-		[Fact]
-		public void Test()
-		{
-
+			return new DbContext(new DbContextOptions(DefaultConfiguration));
 		}
     }
 }

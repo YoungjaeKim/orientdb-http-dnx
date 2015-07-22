@@ -1,5 +1,7 @@
 ﻿using Microsoft.Framework.ConfigurationModel;
 using System;
+using System.Linq;
+using System.Net.Http;
 
 namespace OrientDb.Http
 {
@@ -8,13 +10,30 @@ namespace OrientDb.Http
 		private const string ConfigurationRootPrefix = "orientDb:http:";
 		private const string DefaultConfigurationName = "_default";
 
-		public DbContextOptions()
+		private static IConfiguration GetDefaultConfiguration()
+		{
+			// in aspnet beta5, JsonConfigurationSource doesn't work.
+			// a hard coded configuration will be used before beta6.
+			var source = new MemoryConfigurationSource();
+			source.Add("orientDb:http:_default:baseUrl", null);
+			source.Add("orientDb:http:_default:authorization", null);
+			source.Add("orientDb:http:_default:databaseName", null);
+			var configuration = new Configuration(source);
+			return configuration;
+		}
+
+		public DbContextOptions() : this(GetDefaultConfiguration())
 		{
 		}
 		public DbContextOptions(IConfiguration configurationRoot) : this(configurationRoot, DefaultConfigurationName)
 		{
 		}
         public DbContextOptions(IConfiguration configurationRoot, string configurationName)
+		{
+			Load(configurationRoot, configurationName);
+		}
+
+		public void Load(IConfiguration configurationRoot, string configurationName)
 		{
 			if (configurationRoot == null)
 			{
@@ -26,11 +45,13 @@ namespace OrientDb.Http
 			}
 
 			var configuration = configurationRoot.GetSubKey($"{ConfigurationRootPrefix}{configurationName}");
-            if (configuration == null && !configurationName.Equals(DefaultConfigurationName, StringComparison.OrdinalIgnoreCase))
+			
+			if (!configuration.GetSubKeys().Any()
+				&& !configurationName.Equals(DefaultConfigurationName, StringComparison.OrdinalIgnoreCase))
 			{
 				configuration = configurationRoot.GetSubKey($"{ConfigurationRootPrefix}{DefaultConfigurationName}");
-            }
-			if (configuration == null)
+			}
+			if (!configuration.GetSubKeys().Any())
 			{
 				throw new ArgumentException(nameof(configurationName));
 			}
@@ -40,14 +61,14 @@ namespace OrientDb.Http
 			{
 				throw new InvalidOperationException($"baseUrl must not be null.");
 			}
-			if (!BaseUrl.EndsWith("/"))
+			if (!string.IsNullOrEmpty(BaseUrl))
 			{
-				BaseUrl += "/";
-			}
-			Uri uri;
-			if (!Uri.TryCreate(BaseUrl, UriKind.Absolute, out uri) || !uri.IsAbsoluteUri)
-			{
-				throw new InvalidOperationException($"Invalid baseUrl configuration. baseUrl '{BaseUrl}' must be an absolute url.");
+				Uri uri;
+				if (!Uri.TryCreate(BaseUrl, UriKind.Absolute, out uri) || !uri.IsAbsoluteUri)
+				{
+					throw new InvalidOperationException($"Invalid baseUrl configuration. baseUrl '{BaseUrl}' must be an absolute url.");
+				}
+				BaseUrl = uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.SafeUnescaped);
 			}
 			DatabaseName = configuration["databaseName"] ?? configurationName;
 			Authorization = configuration["authorization"] ?? "";
@@ -56,5 +77,6 @@ namespace OrientDb.Http
 		public string BaseUrl { get; set; }
 		public string DatabaseName { get; set; }
 		public string Authorization { get; set; }
+		public Action<HttpClient> Configure { get; set; }
 	}
 }

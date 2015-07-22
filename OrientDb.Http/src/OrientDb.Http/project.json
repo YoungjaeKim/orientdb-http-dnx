@@ -1,26 +1,26 @@
 {
-    "version": "1.0.0-*",
-    "description": "OrientDb Http client implementation for DNX.",
-    "authors": [ "gongdo" ],
-    "tags": [ "OrientDb", "DNX", ".NET" ],
-    "projectUrl": "https://github.com/gongdo/orientdb-http-dnx",
-    "licenseUrl": "https://github.com/gongdo/orientdb-http-dnx/blob/master/LICENSE",
+  "version": "1.0.0-*",
+  "description": "OrientDb Http client implementation for DNX.",
+  "authors": [ "gongdo" ],
+  "tags": [ "OrientDb", "DNX", ".NET" ],
+  "projectUrl": "https://github.com/gongdo/orientdb-http-dnx",
+  "licenseUrl": "https://github.com/gongdo/orientdb-http-dnx/blob/master/LICENSE",
 
-    "dependencies": {
-        "OrientDb.Core": "",
-        "System.Net.Http": "4.0.0-beta-23110",
-        "Microsoft.Framework.ConfigurationModel": "1.0.0-beta4"
-    },
+  "dependencies": {
+    "OrientDb.Core": "",
+    "System.Net.Http": "4.0.0-beta-23110",
+    "Microsoft.Framework.ConfigurationModel": "1.0.0-beta4"
+  },
 
-    "frameworks": {
-        "dnx451": { },
-        "dnxcore50": {
-            "dependencies": {
-              "Microsoft.CSharp": "4.0.0-beta-23110",
-              "System.Collections": "4.0.10-beta-23110",
-              "System.Linq": "4.0.0-beta-23110",
-              "System.Threading": "4.0.10-beta-23110"
-            }
-        }
+  "frameworks": {
+    "dnx451": { },
+    "dnxcore50": {
+      "dependencies": {
+        "Microsoft.CSharp": "4.0.0-beta-23110",
+        "System.Collections": "4.0.10-beta-23110",
+        "System.Linq": "4.0.0-beta-23110",
+        "System.Threading": "4.0.10-beta-23110"
+      }
     }
+  }
 }
