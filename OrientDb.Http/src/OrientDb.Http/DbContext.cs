@@ -1,4 +1,5 @@
 ﻿using Microsoft.Framework.ConfigurationModel;
+using OrientDb.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace OrientDb.Http
 	{
 		private readonly IHttpClientProvider clientProvider;
 		private readonly DbContextOptions options;
+		private static readonly char[] commandSeparators = new char[] { '\n', ';' };
 
 		public DbContext() : this(new DefaultHttpClientProvider(), new DbContextOptions())
 		{
@@ -36,13 +38,16 @@ namespace OrientDb.Http
 
 		protected HttpClient HttpClient { get; set; } = new HttpClient();
 
-		public async Task<T> ExecuteCommandAsync<T>(string commandText, CommandOptions options = null, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<T> ExecuteCommandAsync<T>(string commandText, CommandOptions commandOptions = null, CancellationToken cancellationToken = default(CancellationToken))
 			where T : class
 		{
 			if (commandText == null)
 			{
 				throw new ArgumentNullException(nameof(commandText));
 			}
+
+			var command = TextUtils.StripComments(commandText);
+			var isBatch = commandSeparators.Any(c => command.Contains(c));
 
 			await Task.FromResult(0);
 			throw new NotImplementedException();
