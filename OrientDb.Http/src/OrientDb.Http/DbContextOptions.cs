@@ -1,4 +1,4 @@
-﻿using Microsoft.Framework.ConfigurationModel;
+﻿using Microsoft.Framework.Configuration;
 using System;
 using System.Linq;
 using System.Net.Http;
@@ -12,14 +12,9 @@ namespace OrientDb.Http
 
 		private static IConfiguration GetDefaultConfiguration()
 		{
-			// in aspnet beta5, JsonConfigurationSource doesn't work.
-			// a hard coded configuration will be used before beta6.
-			var source = new MemoryConfigurationSource();
-			source.Add("orientDb:http:_default:baseUrl", null);
-			source.Add("orientDb:http:_default:authorization", null);
-			source.Add("orientDb:http:_default:databaseName", null);
-			var configuration = new Configuration(source);
-			return configuration;
+			var builder = new ConfigurationBuilder(".");
+            builder.AddJsonFile("config.json", true);
+            return builder.Build();
 		}
 
 		public DbContextOptions() : this(GetDefaultConfiguration())
@@ -44,14 +39,14 @@ namespace OrientDb.Http
 				throw new ArgumentNullException(nameof(configurationName));
 			}
 
-			var configuration = configurationRoot.GetSubKey($"{ConfigurationRootPrefix}{configurationName}");
+			var configuration = configurationRoot.GetConfigurationSection($"{ConfigurationRootPrefix}{configurationName}");
 			
-			if (!configuration.GetSubKeys().Any()
+			if (!configuration.GetConfigurationSections().Any()
 				&& !configurationName.Equals(DefaultConfigurationName, StringComparison.OrdinalIgnoreCase))
 			{
-				configuration = configurationRoot.GetSubKey($"{ConfigurationRootPrefix}{DefaultConfigurationName}");
+				configuration = configurationRoot.GetConfigurationSection($"{ConfigurationRootPrefix}{DefaultConfigurationName}");
 			}
-			if (!configuration.GetSubKeys().Any())
+			if (!configuration.GetConfigurationSections().Any())
 			{
 				throw new ArgumentException(nameof(configurationName));
 			}

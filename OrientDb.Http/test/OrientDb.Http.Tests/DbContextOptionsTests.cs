@@ -1,4 +1,4 @@
-﻿using Microsoft.Framework.ConfigurationModel;
+﻿using Microsoft.Framework.Configuration;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -7,43 +7,47 @@ namespace OrientDb.Http.Tests
 {
 	public class DbContextOptionsTests
     {
-		private static readonly IConfiguration DummyConfiguration = new Configuration();
+		private static readonly IConfiguration DummyConfiguration = new ConfigurationSection(new List<IConfigurationSource>());
 		private static readonly IConfiguration NullConfiguration =
-			new Configuration(
+			new ConfigurationSection(new List<IConfigurationSource> {
 				new MemoryConfigurationSource(
 					new Dictionary<string, string>
 					{
 						{ "orientDb:http:_default:baseUrl", null },
 						{ "orientDb:http:_default:authorization", null },
 						{ "orientDb:http:_default:databaseName", null },
-					}));
+					})
+			});
 		private static readonly IConfiguration EmptyConfiguration =
-			new Configuration(
+			new ConfigurationSection(new List<IConfigurationSource> {
 				new MemoryConfigurationSource(
 					new Dictionary<string, string>
 					{
 						{ "orientDb:http:_default:baseUrl", "" },
 						{ "orientDb:http:_default:authorization", "" },
 						{ "orientDb:http:_default:databaseName", "" },
-					}));
-		private static readonly IConfiguration NonUriConfiguration =
-			new Configuration(
+					})
+			});
+		private static readonly IConfiguration FalseUrlConfiguration =
+			new ConfigurationSection(new List<IConfigurationSource> {
 				new MemoryConfigurationSource(
 					new Dictionary<string, string>
 					{
 						{ "orientDb:http:_default:baseUrl", "non_uri_url" },
 						{ "orientDb:http:_default:authorization", "Basic YWRtaW46YWRtaW4=" },
 						{ "orientDb:http:_default:databaseName", "test" },
-					}));
+					})
+			});
 		private static readonly IConfiguration DefaultConfiguration =
-			new Configuration(
+			new ConfigurationSection(new List<IConfigurationSource> {
 				new MemoryConfigurationSource(
 					new Dictionary<string, string>
 					{
 						{ "orientDb:http:_default:baseUrl", "http://localhost:2480" },
 						{ "orientDb:http:_default:authorization", "Basic YWRtaW46YWRtaW4=" },
 						{ "orientDb:http:_default:databaseName", "test" },
-					}));
+					})
+			});
 
 		[Fact]
 		public void GuardClause_all()
@@ -83,7 +87,7 @@ namespace OrientDb.Http.Tests
 		[Fact]
 		public void Throws_Exception_when_baseUrl_was_not_empty_neither_uri()
 		{
-			Assert.Throws<InvalidOperationException>(() => new DbContextOptions(NonUriConfiguration));
+			Assert.Throws<InvalidOperationException>(() => new DbContextOptions(FalseUrlConfiguration));
 		}
 
 		[Fact]

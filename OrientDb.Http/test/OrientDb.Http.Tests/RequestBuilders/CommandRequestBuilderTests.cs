@@ -1,25 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using OrientDb.Http.RequestBuilders;
-using Microsoft.Framework.ConfigurationModel;
 using Xunit;
 
 namespace OrientDb.Http.Tests.RequestBuilders
 {
 	public class CommandRequestBuilderTests : RequestBuilderTestsBase<string, CommandOptions>
 	{
-		// in aspnet beta5, JsonConfigurationSource doesn't work.
-		// a hard coded configuration will be used before beta6.
-		private static readonly IConfiguration DefaultConfiguration =
-			new Configuration(
-				new MemoryConfigurationSource(
-					new Dictionary<string, string>
-					{
-						{ "orientDb:http:_default:baseUrl", "http://localhost:2480" },
-						{ "orientDb:http:_default:authorization", "Basic YWRtaW46YWRtaW4=" },
-						{ "orientDb:http:_default:databaseName", "test" },
-					}));
-
 		public override RequestBuilder<string, CommandOptions> CreateNullParameteredSut()
 		{
 			return new CommandRequestBuilder(null);
@@ -27,7 +13,7 @@ namespace OrientDb.Http.Tests.RequestBuilders
 
 		public override RequestBuilder<string, CommandOptions> CreateDefaultSut()
 		{
-			return new CommandRequestBuilder(new DbContextOptions(DefaultConfiguration));
+			return new CommandRequestBuilder(new DbContextOptions());
 		}
 
 		[Fact]
